@@ -7,7 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# Функция для получения котировок золота
+
 def get_gold_prices():
     url = "https://api.example.com/gold_prices"  # Замените на реальный API
     response = requests.get(url)
@@ -15,14 +15,13 @@ def get_gold_prices():
     df = pd.DataFrame(data)
     return df
 
-# Функция для получения экономических событий
 def get_economic_events():
     url = "https://www.investing.com/economic-calendar/"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     events = []
 
-    # Парсинг экономических событий
+   
     for event in soup.find_all("tr", class_="economicEvent"):
         date = event.find("td", class_="date").text.strip()
         event_name = event.find("td", class_="event").text.strip()
@@ -32,13 +31,13 @@ def get_economic_events():
     df = pd.DataFrame(events)
     return df
 
-# Функция для анализа данных
+
 def analyze_data(gold_prices, economic_events):
     # Объединение данных по дате
     combined_data = pd.merge(gold_prices, economic_events, on='date', how='inner')
     return combined_data
 
-# Функция для отправки уведомлений
+
 def send_email_notification(events):
     sender_email = "your_email@example.com"
     receiver_email = "receiver_email@example.com"
@@ -61,17 +60,16 @@ def send_email_notification(events):
         text = msg.as_string()
         server.sendmail(sender_email, receiver_email, text)
 
-# Функция для выполнения задач
+
 def job():
     gold_prices = get_gold_prices()
     economic_events = get_economic_events()
     combined_data = analyze_data(gold_prices, economic_events)
     
-    # Фильтрация событий с высоким воздействием
+   
     high_impact_events = combined_data[combined_data['impact'] == 'High']
     send_email_notification(high_impact_events.to_dict('records'))
 
-# Планирование выполнения задач ежедневно в 8 утра
 schedule.every().day.at("08:00").do(job)
 
 while True:
