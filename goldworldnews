@@ -70,7 +70,7 @@ def job():
     high_impact_events = combined_data[combined_data['impact'] == 'High']
     send_email_notification(high_impact_events.to_dict('records'))
 
-schedule.every().day.at("08:00").do(job)
+schedule.every().day.at("09:00").do(job)
 
 while True:
     schedule.run_pending()
