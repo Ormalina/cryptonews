@@ -7,7 +7,6 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
 def get_gold_prices():
     url = "https://api.example.com/gold_prices"  # Замените на реальный API
     response = requests.get(url)
@@ -20,7 +19,6 @@ def get_economic_events():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     events = []
-
    
     for event in soup.find_all("tr", class_="economicEvent"):
         date = event.find("td", class_="date").text.strip()
@@ -30,7 +28,6 @@ def get_economic_events():
 
     df = pd.DataFrame(events)
     return df
-
 
 def analyze_data(gold_prices, economic_events):
     # Объединение данных по дате
