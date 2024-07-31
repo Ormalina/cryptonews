@@ -14,12 +14,14 @@ def get_gold_prices():
     df = pd.DataFrame(data)
     return df
 
+
 def get_economic_events():
     url = "https://www.investing.com/economic-calendar/"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     events = []
-   
+
+
     for event in soup.find_all("tr", class_="economicEvent"):
         date = event.find("td", class_="date").text.strip()
         event_name = event.find("td", class_="event").text.strip()
@@ -28,6 +30,7 @@ def get_economic_events():
 
     df = pd.DataFrame(events)
     return df
+
 
 def analyze_data(gold_prices, economic_events):
     # Объединение данных по дате
@@ -45,11 +48,13 @@ def send_email_notification(events):
     for event in events:
         body += f"{event['date']}: {event['event']} (Impact: {event['impact']})\n"
 
+
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = receiver_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
+
 
     with smtplib.SMTP('smtp.example.com', 587) as server:  # Замените на данные вашего SMTP сервера
         server.starttls()
@@ -57,13 +62,11 @@ def send_email_notification(events):
         text = msg.as_string()
         server.sendmail(sender_email, receiver_email, text)
 
-
 def job():
     gold_prices = get_gold_prices()
     economic_events = get_economic_events()
     combined_data = analyze_data(gold_prices, economic_events)
-    
-   
+       
     high_impact_events = combined_data[combined_data['impact'] == 'High']
     send_email_notification(high_impact_events.to_dict('records'))
 
