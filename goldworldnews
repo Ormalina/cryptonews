@@ -14,13 +14,11 @@ def get_gold_prices():
     df = pd.DataFrame(data)
     return df
 
-
 def get_economic_events():
     url = "https://www.investing.com/economic-calendar/"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     events = []
-
 
     for event in soup.find_all("tr", class_="economicEvent"):
         date = event.find("td", class_="date").text.strip()
@@ -46,15 +44,13 @@ def send_email_notification(events):
     subject = "Upcoming Economic Events Affecting Gold Prices"
     body = "Here are the upcoming economic events that might affect gold prices:\n\n"
     for event in events:
-        body += f"{event['date']}: {event['event']} (Impact: {event['impact']})\n"
-
+        ody += f"{event['date']}: {event['event']} (Impact: {event['impact']})\n"
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = receiver_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
-
 
     with smtplib.SMTP('smtp.example.com', 587) as server:  # Замените на данные вашего SMTP сервера
         server.starttls()
