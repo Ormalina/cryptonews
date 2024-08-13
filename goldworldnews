@@ -14,11 +14,13 @@ def get_gold_prices():
     df = pd.DataFrame(data)
     return df
 
+
 def get_economic_events():
     url = "https://www.investing.com/economic-calendar/"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     events = []
+
 
     for event in soup.find_all("tr", class_="economicEvent"):
         date = event.find("td", class_="date").text.strip()
@@ -26,9 +28,9 @@ def get_economic_events():
         impact = event.find("td", class_="impact").text.strip()
         events.append({"date": date, "event": event_name, "impact": impact})
 
+
     df = pd.DataFrame(events)
     return df
-
 
 def analyze_data(gold_prices, economic_events):
     # Объединение данных по дате
